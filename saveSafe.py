@@ -4,7 +4,7 @@ from os import listdir, remove, rename, chdir, getcwd
 from shutil import copy, rmtree
 
 
-#TODO find out if you're using "directory correctly xD"
+#TODO find out if you're using "directory" correctly
 
 def backup() -> bool:
     """
