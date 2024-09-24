@@ -1,10 +1,19 @@
 import gdown
 import os as os
-from os import listdir, remove, rename, chdir, getcwd
+from os import listdir, remove, rename, chdir, getcwd #Warning: importing open from os will break the module
 from shutil import copy, rmtree
 
 
 #TODO find out if you're using "directory correctly xD"
+
+global fileTypes, folder_ID
+
+#File types stored in a tuple as (magic number,file extension, title)
+fileTypes = [
+            ("PNG",".png","png"),
+            (" Ï ",".jpg","jpeg"),
+            ("PK",".docx","MS Word Document")
+            ]
 
 def backup() -> bool:
     """
@@ -12,29 +21,32 @@ def backup() -> bool:
     Needs a downloaded folder...
     returns True if a backup was saved
     """
-    rmtree("backup")
+    try:
+        r*tree("backup/*")
+    except FileNotFoundError:
+        pass
     ensure_path("backup")
     folders = get_folders_in()
     folders.remove("backup")
 
-    if len(folders) > 0:
-        files = map_folder(folders[0])
+    for i in folders:
+        files = map_folder(i)
         for i in files:
             ensure_path("backup/"+get_parent_folder(i))
             copy(i,"backup/"+get_parent_folder(i))
-        return True
-    return False
     
 
 
-
+#Functions relating to downloading the Google Drive folder
 def download_folder(folder_id = None) -> list:
     """
     Downloads the contents of a google drive folder.
-    might make some weird shit if the given folder is already downloaded.
+    It might make some weird shit if the given folder is already downloaded.
+    Returns a list with the paths to all downloaded files.
     """
+    #TODO: make a dummy Drive folder to tell people they're being silly if they forget to parse a folder ID
     if folder_id==None:
-        print("You need a folder ID, dumbass")
+        gdown.download_folder(id='15t9MM-CTLytwPHR1yUgK4x9qzc-KY-Ha')
         return
     
     
@@ -56,15 +68,15 @@ def clean_download() -> bool:
     return False
 
 
+
+
+
+
 def regenerateFiletypes(path = None, files = None, out = False) -> None:
     """
     Checks if typeless files are from a given list of file types
-    File types are stored in a tuple as (magic number, file extension, title)
     """
-    fileTypes = [("PNG",".png","png"),
-                 (" Ï ",".jpg","jpeg"),
-                 ("PK",".docx","docs document")
-                 ]
+    global fileTypes
     if files == None:
         if path == None:
             files = map_folder()
@@ -74,7 +86,7 @@ def regenerateFiletypes(path = None, files = None, out = False) -> None:
     for i in files:
 
         if '.' not in i:
-            file_head = open(i,'r',encoding='cp850').read()[:10]
+            file_head = open(i,"r",encoding="cp850").read()[:10]
             type_found = False
             
             for j in fileTypes:
@@ -82,18 +94,20 @@ def regenerateFiletypes(path = None, files = None, out = False) -> None:
                 if j[0] in file_head and not type_found:
                     rename(i,i+j[1])
                     if out:
-                        print("found file of type \"" + j[2] + "\": " + i)
+                        print("found file of type '" + j[2] + "': " + i)
                     type_found = True
 
             if not type_found and out:
-                print("No file type recognised for \"" + i + "\"")
+                print("No file type recognised for '" + i + "'")
         else:
             if out:
-                print("\"" + i + "\" already has a file type")
+                print("'" + i + "' already has a file type")
 
 
 
 
+
+#Functions for organising and mapping out a directory
 def map_folder(directory = None) -> list[str]:
     """
     Returns a list of all file directories in a directory.
@@ -121,8 +135,6 @@ def map_folder(directory = None) -> list[str]:
 
 
 
-
-
 def is_folder(directory: str) -> bool:
     """
     Checks if a directory is a folder.
@@ -132,7 +144,7 @@ def is_folder(directory: str) -> bool:
         listdir(directory)
         return True
     except FileNotFoundError:
-        print("\"" + directory + "\" doesn't exist bud...")
+        print("'" + directory + "' doesn't exist bud...")
         return False
     except:
         return False
@@ -161,7 +173,8 @@ def get_folders_in(directory = None) -> list[str]:
 
 def get_parent_folder(directory: str) -> str:
     """
-    Gets the folder a specified file is in, in relation to the current directory.
+    **15
+    ts the folder a specified file is in, in relation to the current directory.
     """
     split = directory.split("/")
     parent_folder = ""
@@ -189,7 +202,8 @@ def ensure_structure(paths = None) -> None:
     edit the paths list to add new folders to the structure or parse your own list.
     """
     if paths == None:
-        paths = ["backup\\"
+        paths = [
+                "backup\\"
                 ]
     created = 0
     for i in paths:
@@ -204,51 +218,8 @@ def ensure_structure(paths = None) -> None:
 
 
 def download(directory: str) -> None:
-    """download a google drive folder, by folder ID"""
+    """download a google drive folder, by folder ID and regenerate potential missing file type extensions"""
     ensure_structure()
     clean_download()
     download_folder(directory)
     regenerateFiletypes()
-
-
-download('11-RjVpovhXaWv8VUhvz5asQokF9OYOIl')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
