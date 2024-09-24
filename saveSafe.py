@@ -4,7 +4,7 @@ from os import listdir, remove, rename, chdir, getcwd #Warning: importing open f
 from shutil import copy, rmtree
 
 
-#TODO find out if you're using "directory correctly xD"
+#TODO find out if you're using "directory" correctly
 
 global fileTypes, folder_ID
 
