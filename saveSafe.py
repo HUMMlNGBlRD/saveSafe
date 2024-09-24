@@ -15,7 +15,7 @@ fileTypes = [
             ("PK",".docx","MS Word Document")
             ]
 
-def backup() -> bool:
+def backup() -> None:
     """
     creates a backup of the downloaded folder
     Needs a downloaded folder...
@@ -38,19 +38,19 @@ def backup() -> bool:
 
 
 #Functions relating to downloading the Google Drive folder
-def download_folder(folder_id = None) -> list:
+def download_folder(folder_ID = None) -> list:
     """
     Downloads the contents of a google drive folder.
     It might make some weird shit if the given folder is already downloaded.
     Returns a list with the paths to all downloaded files.
     """
     #TODO: make a dummy Drive folder to tell people they're being silly if they forget to parse a folder ID
-    if folder_id==None:
+    if folder_ID==None:
         gdown.download_folder(id='15t9MM-CTLytwPHR1yUgK4x9qzc-KY-Ha')
         return
     
     
-    li = gdown.download_folder(id=folder_id)
+    li = gdown.download_folder(id=folder_ID)
 
     return li
 
@@ -62,17 +62,14 @@ def clean_download() -> bool:
     """
     folders = get_folders_in()
     folders.remove("backup")
-    if len(folders) > 0:
-        rmtree(folders[0])
-        return True
-    return False
+    for i in folders:
+        rmtree(i)
 
 
 
 
 
-
-def regenerateFiletypes(path = None, files = None, out = False) -> None:
+def regenerateFiletypes(files = None, path = None, out = False) -> None:
     """
     Checks if typeless files are from a given list of file types
     """
@@ -217,9 +214,9 @@ def ensure_structure(paths = None) -> None:
 
 
 
-def download(directory: str) -> None:
+def download(folder_ID: str) -> None:
     """download a google drive folder, by folder ID and regenerate potential missing file type extensions"""
     ensure_structure()
     clean_download()
-    download_folder(directory)
+    download_folder(folder_ID)
     regenerateFiletypes()
