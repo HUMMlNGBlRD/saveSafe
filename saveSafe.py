@@ -1,6 +1,6 @@
 import gdown
 import os as os
-from os import listdir, remove, rename, chdir, getcwd #Warning: importing open from os will break the module
+from os import listdir, remove, rename, chdir, getcwd
 from shutil import copy, rmtree
 
 

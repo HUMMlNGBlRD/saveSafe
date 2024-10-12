@@ -63,3 +63,10 @@ and returns a list of all files found.
   A directory to be checked  
 
 Checks if a directory is a folder and returns a boolean.
+
+
+# Extras
+
+## Warnings
+
+1. The 'os' module has an 'open' function which conflicts with the default 'open' function so 'os' must be imported with an alias.
